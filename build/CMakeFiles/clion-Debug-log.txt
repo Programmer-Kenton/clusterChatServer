@@ -1,4 +1,7 @@
 /usr/local/cmake-3.30.3/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/usr/bin/make -DCMAKE_C_COMPILER=/usr/bin/cc -DCMAKE_CXX_COMPILER=/usr/bin/g++ -G "Unix Makefiles" -S /usr/local/WorkSpace/clusterChatServer -B /usr/local/WorkSpace/clusterChatServer/build
 -- Configuring done (0.0s)
--- Generating done (0.0s)
--- Build files have been written to: /usr/local/WorkSpace/clusterChatServer/build
+CMake Error at src/CMakeLists.txt:9 (add_executable):
+  No SOURCES given to target: ChatServer
+
+
+CMake Generate step failed.  Build files cannot be regenerated correctly.
