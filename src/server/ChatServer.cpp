@@ -5,7 +5,7 @@
  * @Github https://github.com/Programmer-Kenton
  * @Author Kenton
  */
-#include "ChatServer.h"
+#include "ChatServer.hpp"
 
 ChatServer::ChatServer(EventLoop *loop, const InetAddress &listenAddr, const string &nameArg)
         : _server(loop, listenAddr, nameArg),
@@ -35,5 +35,8 @@ void ChatServer::onMessage(const muduo::net::TcpConnectionPtr &conn, muduo::net:
     // 数据的反序列化
     json js = json::parse(buf);
     // 完全解耦网络模块和业务模块
-
+    // 通过js["msgId"]获取->业务handler->conn js time
+    auto msgHandler = ChatService::instance()->getHandler(js[MSGID].get<int>());
+    // 回调消息绑定好的事件处理器 来执行响应的业务处理
+    msgHandler(conn,js,time);
 }

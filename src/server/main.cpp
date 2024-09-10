@@ -6,8 +6,7 @@
  * @Author Kenton
  */
 
-#include <iostream>
-#include "ChatServer.h"
+#include "ChatServer.hpp"
 
 using namespace std;
 

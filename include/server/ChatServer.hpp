@@ -1,23 +1,19 @@
 /**
- * @Description 通信服务器类
+ * @Description 服务器通信模块
  * @Version 1.0.0
  * @Date 2024/9/10 14:46
  * @Github https://github.com/Programmer-Kenton
  * @Author Kenton
  */
-#ifndef CLUSTERCHATSERVER_CHATSERVER_H
-#define CLUSTERCHATSERVER_CHATSERVER_H
+#ifndef CLUSTERCHATSERVER_CHATSERVER_HPP
+#define CLUSTERCHATSERVER_CHATSERVER_HPP
 
 #include <muduo/net/TcpServer.h>
 #include <muduo/net/EventLoop.h>
-#include <functional>
-#include "json.hpp"
+#include "ChatService.hpp"
 
-using namespace muduo;
-using namespace muduo::net;
 using namespace std::placeholders;
-using json = nlohmann::json;
-using namespace std;
+
 
 class ChatServer {
 
@@ -43,4 +39,4 @@ private:
 };
 
 
-#endif //CLUSTERCHATSERVER_CHATSERVER_H
+#endif //CLUSTERCHATSERVER_CHATSERVER_HPP
