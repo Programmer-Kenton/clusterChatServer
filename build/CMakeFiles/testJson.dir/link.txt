@@ -1,0 +1,1 @@
+/usr/bin/g++ -g CMakeFiles/testJson.dir/thirdparty/testJson.cpp.o -o testJson
