@@ -32,6 +32,9 @@ public:
     // 查询操作
     MYSQL_RES* query(string sql);
 
+    // 获取连接
+    MYSQL *getConnection();
+
 private:
     // 加载数据库配置文件信息
     bool loadConfigFile();

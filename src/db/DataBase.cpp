@@ -78,3 +78,7 @@ bool DataBase::loadConfigFile() {
 
     return true;
 }
+
+MYSQL *DataBase::getConnection() {
+    return _conn;
+}
