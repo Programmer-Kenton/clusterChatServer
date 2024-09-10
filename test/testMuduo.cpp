@@ -81,7 +81,6 @@ private:
         cout << "recv data:" << buf << "time:" << time.toString() << endl;
         // 发送序列化后的数据
         conn->send(buf);
-        LOG_INFO
     }
 
 

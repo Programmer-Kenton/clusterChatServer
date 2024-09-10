@@ -3,7 +3,6 @@ project(clusterChatServer)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(clusterChatServer main.cpp)
 
 # 项目需要使用的第三方库头文件路径
 include_directories(${PROJECT_SOURCE_DIR}/thirdparty)
@@ -20,6 +19,7 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 # 加载子目录
 # 加载测试子模块
 add_subdirectory(test)
+
 # 加载项目子模块
 add_subdirectory(src)
 

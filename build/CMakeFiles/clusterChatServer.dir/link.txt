@@ -1,1 +1,0 @@
-/usr/bin/g++ -g CMakeFiles/clusterChatServer.dir/main.cpp.o -o clusterChatServer
