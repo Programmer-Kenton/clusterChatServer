@@ -1,0 +1,60 @@
+/**
+ * @Description 数据库操作类
+ * @Version 1.0.0
+ * @Date 2024/9/10 16:45
+ * @Github https://github.com/Programmer-Kenton
+ * @Author Kenton
+ */
+#ifndef CLUSTERCHATSERVER_DATABASE_H
+#define CLUSTERCHATSERVER_DATABASE_H
+
+#include <muduo/base/Logging.h>
+#include <mysql/mysql.h>
+#include <string>
+
+using namespace std;
+
+class DataBase {
+
+public:
+    // 初始化数据库连接
+    DataBase();
+
+    // 释放数据库连接资源
+    ~DataBase();
+
+    // 连接数据库
+    bool connect();
+
+    // 更新操作
+    bool update(string sql);
+
+    // 查询操作
+    MYSQL_RES* query(string sql);
+
+private:
+    // 加载数据库配置文件信息
+    bool loadConfigFile();
+
+private:
+    // 连接对象
+    MYSQL *_conn;
+
+    // ip地址
+    string _ip;
+
+    // 端口号
+    unsigned short _port;
+
+    // 连接用户
+    string _username;
+
+    // 连接密码
+    string _password;
+
+    // 连接的数据库名
+    string _dbname;
+};
+
+
+#endif //CLUSTERCHATSERVER_DATABASE_H
