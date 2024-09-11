@@ -39,6 +39,7 @@ bool MySQL::update(string sql) {
         LOG_ERROR << __FILE__ << ':' << __LINE__ << ':' << sql << " 更新失败";
         return false;
     }
+    LOG_INFO << __FILE__ << ':' << __LINE__ << ':' << sql << " 更新成功";
     return true;
 }
 

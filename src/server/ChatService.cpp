@@ -8,13 +8,52 @@
 
 #include "ChatService.hpp"
 
+// {"msgid":3,"name":"LCX","password":"123456"} 注册
+// {"msgid":1,"id":1,"password":"123456"} 登录
+
 ChatService *ChatService::instance() {
     static ChatService service;
     return &service;
 }
 
 void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time) {
-    LOG_INFO << "do login service---登录成功";
+    int id = js[ID];
+    string pwd = js[PWD];
+
+
+    User user = _userModel.query(id);
+
+    LOG_INFO << "打印查找的user信息 id = " << user.getId() << ",pwd = "
+             << user.getPwd() << ",state = " << user.getState();
+
+    json response;
+
+    if (user.getId() == id && user.getPwd() == pwd){
+        if (user.getState() == ONLINE){
+            // 该用户已登录 不允许重复登录
+            response[MSGID] = LOGIN_MSG_ACK;
+            response[ERRNO] = OTHER;
+            response[ERRMSG] = INLOGIN;
+            conn->send(response.dump());
+        }else{
+            // 登录成功 更新用户状态信息
+            user.setState(ONLINE);
+            _userModel.updateState(user);
+            response[MSGID] = LOGIN_MSG_ACK;
+            response[ERRNO] = SUCCESS;
+            response[ID] = user.getId();
+            response[NAME] = user.getName();
+            conn->send(response.dump());
+            LOG_INFO << "用户名为:" << user.getName() << " 登录成功...";
+        }
+    }else{
+        // 登录失败
+        response[MSGID] = LOGIN_MSG_ACK;
+        response[ERRNO] = FAILED;
+        response[ERRMSG] = LOGIN_ERROR;
+        conn->send(response.dump());
+        LOG_INFO << "用户名为:" << user.getName() << " 登录失败...";
+    }
 }
 
 void ChatService::reg(const TcpConnectionPtr &conn, json &js, Timestamp time) {
@@ -29,14 +68,14 @@ void ChatService::reg(const TcpConnectionPtr &conn, json &js, Timestamp time) {
     if (state){
         // 注册成功
         response[MSGID] = REG_MSG_ACK;
-        response[ERRNO] = 0;
+        response[ERRNO] = SUCCESS;
         response[ID] = user.getId();
         conn->send(response.dump());
         LOG_INFO << "用户名为:" << user.getName() << " 注册成功...";
     }else{
         // 注册失败
         response[MSGID] = REG_MSG_ACK;
-        response[ERRNO] = 1;
+        response[ERRNO] = FAILED;
         conn->send(response.dump());
         LOG_INFO << "用户名为:" << user.getName() << " 注册失败...";
     }

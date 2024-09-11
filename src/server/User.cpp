@@ -40,7 +40,7 @@ string User::getName() const {
     return name;
 }
 
-string User::getPassword() const {
+string User::getPwd() const {
     return password;
 }
 

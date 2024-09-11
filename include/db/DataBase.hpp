@@ -16,7 +16,7 @@ using namespace std;
 
 class MySQL {
 
-    // {"msgid":2,"name":"LCX","password":"123456"}
+
 public:
     // 初始化数据库连接
     MySQL();

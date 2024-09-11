@@ -9,6 +9,7 @@
 #define CLUSTERCHATSERVER_USER_H
 
 #include <string>
+#include "Public.hpp"
 
 using namespace std;
 
@@ -17,7 +18,7 @@ class User {
 
 public:
 
-    User(int id = -1,string name = "",string pwd = "",string state = "offline");
+    User(int id = -1,string name = "",string pwd = "",string state = OFFLINE);
 
     void setId(int id);
 
@@ -31,7 +32,7 @@ public:
 
     string getName() const;
 
-    string getPassword() const;
+    string getPwd() const;
 
     string getState() const;
 

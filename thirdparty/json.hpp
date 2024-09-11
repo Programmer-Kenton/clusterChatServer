@@ -332,7 +332,7 @@ json.exception.type_error.308 | cannot use push_back() with string | The @ref pu
 json.exception.type_error.309 | cannot use insert() with | The @ref insert() member functions can only be executed for certain JSON types.
 json.exception.type_error.310 | cannot use swap() with number | The @ref swap() member functions can only be executed for certain JSON types.
 json.exception.type_error.311 | cannot use emplace_back() with string | The @ref emplace_back() member function can only be executed for certain JSON types.
-json.exception.type_error.312 | cannot use update() with string | The @ref update() member functions can only be executed for certain JSON types.
+json.exception.type_error.312 | cannot use updateState() with string | The @ref updateState() member functions can only be executed for certain JSON types.
 json.exception.type_error.313 | invalid value to unflatten | The @ref unflatten function converts an object whose keys are JSON Pointers back into an arbitrary nested JSON value. The JSON Pointers must not overlap, because then the resulting value would not be well defined.
 json.exception.type_error.314 | only objects can be unflattened | The @ref unflatten function only works for an object whose keys are JSON Pointers.
 json.exception.type_error.315 | values in object must be primitive | The @ref unflatten function only works for an object whose keys are JSON Pointers and whose values are primitive.
@@ -18240,14 +18240,14 @@ class basic_json
     @param[in] j  JSON object to read values from
 
     @throw type_error.312 if called on JSON values other than objects; example:
-    `"cannot use update() with string"`
+    `"cannot use updateState() with string"`
 
     @complexity O(N*log(size() + N)), where N is the number of elements to
                 insert.
 
-    @liveexample{The example shows how `update()` is used.,update}
+    @liveexample{The example shows how `update()` is used.,updateState}
 
-    @sa https://docs.python.org/3.6/library/stdtypes.html#dict.update
+    @sa https://docs.python.org/3.6/library/stdtypes.html#dict.updateState
 
     @since version 3.0.0
     */
@@ -18263,11 +18263,11 @@ class basic_json
 
         if (JSON_UNLIKELY(not is_object()))
         {
-            JSON_THROW(type_error::create(312, "cannot use update() with " + std::string(type_name())));
+            JSON_THROW(type_error::create(312, "cannot use updateState() with " + std::string(type_name())));
         }
         if (JSON_UNLIKELY(not j.is_object()))
         {
-            JSON_THROW(type_error::create(312, "cannot use update() with " + std::string(j.type_name())));
+            JSON_THROW(type_error::create(312, "cannot use updateState() with " + std::string(j.type_name())));
         }
 
         for (auto it = j.cbegin(); it != j.cend(); ++it)
@@ -18286,7 +18286,7 @@ class basic_json
     @param[in] last end of the range of elements to insert
 
     @throw type_error.312 if called on JSON values other than objects; example:
-    `"cannot use update() with string"`
+    `"cannot use updateState() with string"`
     @throw invalid_iterator.202 if iterator @a first or @a last does does not
     point to an object; example: `"iterators first and last must point to
     objects"`
@@ -18296,9 +18296,9 @@ class basic_json
     @complexity O(N*log(size() + N)), where N is the number of elements to
                 insert.
 
-    @liveexample{The example shows how `update()` is used__range.,update}
+    @liveexample{The example shows how `update()` is used__range.,updateState}
 
-    @sa https://docs.python.org/3.6/library/stdtypes.html#dict.update
+    @sa https://docs.python.org/3.6/library/stdtypes.html#dict.updateState
 
     @since version 3.0.0
     */
@@ -18314,7 +18314,7 @@ class basic_json
 
         if (JSON_UNLIKELY(not is_object()))
         {
-            JSON_THROW(type_error::create(312, "cannot use update() with " + std::string(type_name())));
+            JSON_THROW(type_error::create(312, "cannot use updateState() with " + std::string(type_name())));
         }
 
         // check if range iterators belong to the same JSON object
