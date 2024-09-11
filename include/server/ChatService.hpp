@@ -12,10 +12,14 @@
 #include <functional>
 #include <muduo/net/TcpConnection.h>
 #include <string>
+#include <map>
 #include "json.hpp"
 #include "Public.hpp"
 #include "UserModel.hpp"
 #include "offLineMessageModel.hpp"
+#include "friendModel.hpp"
+#include "GroupModel.h"
+
 
 using namespace muduo;
 using namespace muduo::net;
@@ -47,6 +51,15 @@ public:
     // 添加好友业务
     void addFriend(const TcpConnectionPtr& conn,json &js,Timestamp time);
 
+    // 创建群组业务
+    void createGroup(const TcpConnectionPtr& conn, json &js, Timestamp time);
+
+    // 加入群组聊天
+    void addGroup(const TcpConnectionPtr &conn,json &js,Timestamp time);
+
+    // 群组聊天
+    void groupChat(const TcpConnectionPtr &conn,json &js,Timestamp time);
+
     // 处理客户端异常退出
     void clientCloseException(const TcpConnectionPtr& conn);
 
@@ -72,6 +85,12 @@ private:
 
     // 离线消息数据操作对象
     offLineMessageModel _offlineMsgModel;
+
+    // 好友信息数据操作对象
+    friendModel _friendModel;
+
+    // 群组信息数据操作对象
+    GroupModel _groupModel;
 };
 
 

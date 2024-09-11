@@ -9,7 +9,7 @@
 #define CLUSTERCHATSERVER_USERMODEL_HPP
 
 #include <iostream>
-#include "User.h"
+#include "User.hpp"
 #include "DataBase.hpp"
 
 using namespace std;

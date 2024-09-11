@@ -23,7 +23,13 @@ enum EnMsgType{
     // 聊天消息
     ONE_CHAT_MSG = 5,
     // 添加好友消息
-    ADD_FRIEND_MSG = 6
+    ADD_FRIEND_MSG = 6,
+    // 创建群组
+    CREATE_GROUP_MSG = 7,
+    // 加入群组
+    ADD_GROUP_MSG = 8,
+    // 群聊天
+    GROUP_CHAT_MSG = 9,
 };
 
 // 回调消息
@@ -41,7 +47,14 @@ const std::string PWD = "password";
 const std::string NAME = "name";
 const std::string TO = "to";
 const std::string FROM = "from";
+const std::string FRIENDID = "friendid";
+// 好友列表
+const std::string FRIENDS = "friends";
 
+// 群组信息
+const std::string GROUPNAME = "groupname";
+const std::string GROUPDESC = "groupdesc";
+const std::string GROUPID = "groupid";
 
 // 发送的信息
 const std::string MSG = "msg";
@@ -54,6 +67,7 @@ const int FAILED = 1;
 const int OTHER = 2;
 
 // 用户在线状态
+const std::string STATE = "state";
 const std::string ONLINE = "online";
 const std::string OFFLINE = "offline";
 

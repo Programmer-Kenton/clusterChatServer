@@ -5,8 +5,8 @@
  * @Github https://github.com/Programmer-Kenton
  * @Author Kenton
  */
-#ifndef CLUSTERCHATSERVER_USER_H
-#define CLUSTERCHATSERVER_USER_H
+#ifndef CLUSTERCHATSERVER_USER_HPP
+#define CLUSTERCHATSERVER_USER_HPP
 
 #include <string>
 #include "Public.hpp"
@@ -36,7 +36,7 @@ public:
 
     string getState() const;
 
-private:
+protected:
     int id;
     string name;
     string password;
@@ -44,4 +44,4 @@ private:
 };
 
 
-#endif //CLUSTERCHATSERVER_USER_H
+#endif //CLUSTERCHATSERVER_USER_HPP

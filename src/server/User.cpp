@@ -6,7 +6,7 @@
  * @Author Kenton
  */
 
-#include "User.h"
+#include "User.hpp"
 
 User::User(int id, string name, string pwd, string state) {
     this->id = id;

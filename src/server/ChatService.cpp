@@ -12,6 +12,7 @@
 // {"msgid":1,"id":1,"password":"123456"} LCX登录
 // {"msgid":1,"id":2,"password":"123456"} lisi登录
 // {"msgid":5,"id":1,"from":"LCX","to":2,"msg":"hello"} LCX给lisi发消息
+// {"msgid":6,"id":1,"friendid":2} LCX添加lisi
 
 ChatService *ChatService::instance() {
     static ChatService service;
@@ -62,6 +63,22 @@ void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time) 
                 // 读取用户的离线消息后把该用户的所有离线消息从数据库从删除掉
                 _offlineMsgModel.remove(id);
             }
+
+            // 查询用户的好友信息并返回
+            vector<User> userVec = _friendModel.query(id);
+            if (!userVec.empty()){
+                vector<string> vec2;
+                json js;
+                for(User &user : userVec){
+                    js[ID] = user.getId();
+                    js[NAME] = user.getName();
+                    js[STATE] = user.getState();
+                    vec2.push_back(js.dump());
+                }
+                response[FRIENDS] = vec2;
+                LOG_INFO << "登录...查询用户的好友信息并返回";
+            }
+
             conn->send(response.dump());
             LOG_INFO << "用户名为:" << user.getName() << " 登录成功...";
         }
@@ -105,6 +122,7 @@ ChatService::ChatService() {
     _msgHandlerMap.insert({LOGIN_MSG,std::bind(&ChatService::login,this,_1,_2,_3)});
     _msgHandlerMap.insert({REG_MSG,std::bind(&ChatService::reg,this,_1,_2,_3)});
     _msgHandlerMap.insert({ONE_CHAT_MSG,std::bind(&ChatService::oneChat,this,_1,_2,_3)});
+    _msgHandlerMap.insert({ADD_FRIEND_MSG,std::bind(&ChatService::addFriend,this,_1,_2,_3)});
 }
 
 MsgHandler ChatService::getHandler(int msgId) {
@@ -190,5 +208,51 @@ void ChatService::serverCloseException() {
 
     if (_userConnMap.size() == 0){
         LOG_INFO << "服务器宕机...所有用户都改为离线状态";
+    }
+}
+
+void ChatService::addFriend(const TcpConnectionPtr &conn, json &js, Timestamp time) {
+    int userId = js[ID].get<int>();
+    int friendId = js[FRIENDID].get<int>();
+
+    // 存户好友信息
+    _friendModel.insert(userId,friendId);
+}
+
+void ChatService::createGroup(const TcpConnectionPtr &conn, json &js, Timestamp time) {
+    int userId = js[ID].get<int>();
+    string name = js[GROUPNAME];
+    string desc = js[GROUPDESC];
+
+    // 存储新创建的群组消息
+    Group group(-1,name,desc);
+    if (_groupModel.createGroup(group)){
+        LOG_INFO << "创建群组成功..." << " 群名为:" << name;
+        // 存储群组创建人信息
+        _groupModel.addGroup(userId,group.getId(),"creator");
+        LOG_INFO << "创建群组并成功加入群组聊天...";
+    }
+}
+
+void ChatService::addGroup(const TcpConnectionPtr &conn, json &js, Timestamp time) {
+    int userId = js[ID].get<int>();
+    int groupId = js[GROUPID].get<int>();
+    _groupModel.addGroup(userId,groupId,"normal");
+}
+
+void ChatService::groupChat(const TcpConnectionPtr &conn, json &js, Timestamp time) {
+    int userId = js[ID].get<int>();
+    int groupId = js[GROUPID].get<int>();
+    vector<int> useridVec = _groupModel.queryGroupUsers(userId,groupId);
+    for(int id : useridVec){
+        lock_guard<mutex> lock(_connMutex);
+        auto it = _userConnMap.find(id);
+        if (it != _userConnMap.end()){
+            // 转发群消息
+            it->second->send(js.dump());
+        }else{
+            // 存储离线群消息
+            _offlineMsgModel.insert(id,js.dump());
+        }
     }
 }
