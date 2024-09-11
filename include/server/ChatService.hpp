@@ -15,6 +15,7 @@
 #include "json.hpp"
 #include "Public.hpp"
 #include "UserModel.hpp"
+#include "offLineMessageModel.hpp"
 
 using namespace muduo;
 using namespace muduo::net;
@@ -36,6 +37,9 @@ public:
 
     // 注册业务
     void reg(const TcpConnectionPtr& conn,json& js,Timestamp time);
+
+    // 一对一聊天业务
+    void oneChat(const TcpConnectionPtr &conn,json &js,Timestamp time);
 
     // 获取消息对应的处理器
     MsgHandler getHandler(int msgId);
@@ -59,6 +63,9 @@ private:
 
     // 用户数据操作对象
     UserModel _userModel;
+
+    // 离线消息数据操作对象
+    offLineMessageModel _offlineMsgModel;
 };
 
 

@@ -14,22 +14,37 @@
 enum EnMsgType{
     // 登录消息
     LOGIN_MSG = 1,
+    // 登录响应消息
     LOGIN_MSG_ACK = 2,
     // 注册消息
     REG_MSG = 3,
     // 注册响应消息
-    REG_MSG_ACK = 4
+    REG_MSG_ACK = 4,
+    // 聊天消息
+    ONE_CHAT_MSG = 5,
 };
 
 // 回调消息
+// 消息类型
 const std::string MSGID = "msgid";
+// 错误码
 const std::string ERRNO = "errno";
+// 错误信息
 const std::string ERRMSG = "errmsg";
 
 // 用户信息
+
 const std::string ID = "id";
 const std::string PWD = "password";
 const std::string NAME = "name";
+const std::string TO = "to";
+const std::string FROM = "from";
+
+
+// 发送的信息
+const std::string MSG = "msg";
+// 离线消息
+const std::string OFFLINEMSG = "offlinemsg";
 
 // 成功/失败操作
 const int SUCCESS = 0;

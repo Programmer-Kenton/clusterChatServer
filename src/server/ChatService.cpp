@@ -9,7 +9,9 @@
 #include "ChatService.hpp"
 
 // {"msgid":3,"name":"LCX","password":"123456"} 注册
-// {"msgid":1,"id":1,"password":"123456"} 登录
+// {"msgid":1,"id":1,"password":"123456"} LCX登录
+// {"msgid":1,"id":2,"password":"123456"} lisi登录
+// {"msgid":5,"id":1,"from":"LCX","to":2,"msg":"hello"} LCX给lisi发消息
 
 ChatService *ChatService::instance() {
     static ChatService service;
@@ -41,6 +43,7 @@ void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time) 
                 // 登录成功 记录用户连接信息
                 lock_guard<mutex> lock(_connMutex);
                 _userConnMap.insert({id,conn});
+                LOG_INFO << "用户id:" << id << " 连接信息被缓存...";
             }
 
 
@@ -51,6 +54,14 @@ void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time) 
             response[ERRNO] = SUCCESS;
             response[ID] = user.getId();
             response[NAME] = user.getName();
+
+            // 查询用户是否有离线消息
+            vector<string> vec = _offlineMsgModel.query(id);
+            if (!vec.empty()){
+                response[OFFLINEMSG] = vec;
+                // 读取用户的离线消息后把该用户的所有离线消息从数据库从删除掉
+                _offlineMsgModel.remove(id);
+            }
             conn->send(response.dump());
             LOG_INFO << "用户名为:" << user.getName() << " 登录成功...";
         }
@@ -93,6 +104,7 @@ ChatService::ChatService() {
     // 初始化时插入回调消息及绑定的函数
     _msgHandlerMap.insert({LOGIN_MSG,std::bind(&ChatService::login,this,_1,_2,_3)});
     _msgHandlerMap.insert({REG_MSG,std::bind(&ChatService::reg,this,_1,_2,_3)});
+    _msgHandlerMap.insert({ONE_CHAT_MSG,std::bind(&ChatService::oneChat,this,_1,_2,_3)});
 }
 
 MsgHandler ChatService::getHandler(int msgId) {
@@ -132,4 +144,28 @@ void ChatService::clientCloseException(const TcpConnectionPtr &conn) {
         LOG_INFO << "客户端异常退出...更改用户为离线状态";
     }
 
+}
+
+void ChatService::oneChat(const TcpConnectionPtr &conn, json &js, Timestamp time) {
+    int toId = js[TO].get<int>();
+    string msg = js[MSG];
+
+    // 标识用户是否在线
+    // bool userState = false;
+
+    {
+        lock_guard<mutex> lock(_connMutex);
+        auto it = _userConnMap.find(toId);
+        if (it != _userConnMap.end()){
+            // toId用户在线 转发消息
+            // userState = true;
+            // 服务器主动推送消息给toId用户
+            it->second->send(js.dump());
+            LOG_INFO << "给目标用户id:" << toId << " 推送消息:" << msg;
+            return;
+        }
+    }
+
+    // toId用户不在线 存储离线消息
+    _offlineMsgModel.insert(toId,js.dump());
 }
