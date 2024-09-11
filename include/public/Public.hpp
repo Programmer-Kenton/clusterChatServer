@@ -22,6 +22,8 @@ enum EnMsgType{
     REG_MSG_ACK = 4,
     // 聊天消息
     ONE_CHAT_MSG = 5,
+    // 添加好友消息
+    ADD_FRIEND_MSG = 6
 };
 
 // 回调消息

@@ -44,8 +44,14 @@ public:
     // 获取消息对应的处理器
     MsgHandler getHandler(int msgId);
 
+    // 添加好友业务
+    void addFriend(const TcpConnectionPtr& conn,json &js,Timestamp time);
+
     // 处理客户端异常退出
     void clientCloseException(const TcpConnectionPtr& conn);
+
+    // 处理服务器异常宕机 业务重置方法
+    void serverCloseException();
 
 private:
 

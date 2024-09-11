@@ -169,3 +169,26 @@ void ChatService::oneChat(const TcpConnectionPtr &conn, json &js, Timestamp time
     // toId用户不在线 存储离线消息
     _offlineMsgModel.insert(toId,js.dump());
 }
+
+void ChatService::serverCloseException() {
+    LOG_INFO << "服务器宕机...开始清理用户状态";
+    User user;
+
+    for(auto it = _userConnMap.begin();it != _userConnMap.end();it++){
+        user.setId(it->first);
+        user.setState(ONLINE);
+        if (user.getId() != -1 && user.getState() != OFFLINE){
+            user.setState(OFFLINE);
+            LOG_INFO << "状态更改成功...准备保存到数据库";
+            bool success = _userModel.updateState(user);
+            if (success){
+                LOG_INFO << "用户状态成功写入数据库";
+            }
+        }
+        _userConnMap.erase(it);
+    }
+
+    if (_userConnMap.size() == 0){
+        LOG_INFO << "服务器宕机...所有用户都改为离线状态";
+    }
+}
