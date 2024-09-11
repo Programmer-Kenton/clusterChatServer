@@ -48,6 +48,8 @@ const std::string NAME = "name";
 const std::string TO = "to";
 const std::string FROM = "from";
 const std::string FRIENDID = "friendid";
+const std::string USERS = "users";
+
 // 好友列表
 const std::string FRIENDS = "friends";
 
@@ -55,6 +57,8 @@ const std::string FRIENDS = "friends";
 const std::string GROUPNAME = "groupname";
 const std::string GROUPDESC = "groupdesc";
 const std::string GROUPID = "groupid";
+const std::string GROUPS = "groups";
+const std::string ROLE = "role";
 
 // 发送的信息
 const std::string MSG = "msg";
@@ -72,7 +76,9 @@ const std::string ONLINE = "online";
 const std::string OFFLINE = "offline";
 
 // 回显给前端的错误信息
-const std::string INLOGIN = "该账号已经登录,请重新输入账号";
-const std::string LOGIN_ERROR = "用户名/密码错误,请重新输入账号";
+const std::string INLOGIN = "this account is using,input another";
+const std::string LOGIN_ERROR = "User name/password is incorrect, please reenter the account";
+
+const std::string TIME = "time";
 
 #endif //CLUSTERCHATSERVER_PUBLIC_H

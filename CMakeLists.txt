@@ -20,7 +20,7 @@ include_directories(${PROJECT_SOURCE_DIR}/include/server)
 
 ## 加载子目录
 ## 加载测试子模块
-#add_subdirectory(test)
+add_subdirectory(test)
 
 # 加载项目子模块
 add_subdirectory(src)

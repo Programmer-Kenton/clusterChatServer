@@ -18,23 +18,44 @@ class User {
 
 public:
 
-    User(int id = -1,string name = "",string pwd = "",string state = OFFLINE);
+    User(int id = -1,string name = "",string pwd = "",string state = OFFLINE){
+        this->id = id;
+        this->name = name;
+        this->password = password;
+        this->state = state;
+    }
 
-    void setId(int id);
+    void setId(int id){
+        this->id = id;
+    }
 
-    void setName(string name);
+    void setName(string name){
+        this->name = name;
+    }
 
-    void setPwd(string pwd);
+    void setPwd(string pwd){
+        this->password = pwd;
+    }
 
-    void setState(string state);
+    void setState(string state){
+        this->state = state;
+    }
 
-    int getId() const;
+    int getId() const{
+        return id;
+    }
 
-    string getName() const;
+    string getName() const{
+        return name;
+    }
 
-    string getPwd() const;
+    string getPwd() const{
+        return password;
+    }
 
-    string getState() const;
+    string getState() const{
+        return state;
+    }
 
 protected:
     int id;

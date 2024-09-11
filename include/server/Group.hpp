@@ -17,22 +17,40 @@ using namespace std;
 class Group {
 
 public:
-    Group(int id = -1, const string name = "", const string desc = "");
+    Group(int id = -1, const string name = "", const string desc = ""){
+        this->id = id;
+        this->name = name;
+        this->desc = desc;
+    }
 
 
-    int getId() const;
+    int getId() const{
+        return this->id;
+    }
 
-    void setId(int id);
+    void setId(int id){
+        this->id = id;
+    }
 
-    string getName() const;
+    string getName() const{
+        return this->name;
+    }
 
-    void setName(const string &name);
+    void setName(const string &name){
+        this->name = name;
+    }
 
-    string getDesc() const;
+    string getDesc() const{
+        return this->desc;
+    }
 
-    string setDesc(const string desc);
+    string setDesc(const string desc){
+        return this->desc;
+    }
 
-    vector<GroupUser> &getUsers();
+    vector<GroupUser> &getUsers(){
+        return this->users;
+    }
 
 private:
     int id;
