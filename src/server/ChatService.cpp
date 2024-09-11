@@ -36,6 +36,14 @@ void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time) 
             response[ERRMSG] = INLOGIN;
             conn->send(response.dump());
         }else{
+
+            {
+                // 登录成功 记录用户连接信息
+                lock_guard<mutex> lock(_connMutex);
+                _userConnMap.insert({id,conn});
+            }
+
+
             // 登录成功 更新用户状态信息
             user.setState(ONLINE);
             _userModel.updateState(user);
@@ -98,4 +106,30 @@ MsgHandler ChatService::getHandler(int msgId) {
     }else{
         return _msgHandlerMap[msgId];
     }
+}
+
+void ChatService::clientCloseException(const TcpConnectionPtr &conn) {
+    User user;
+    {
+        lock_guard<mutex> lock(_connMutex);
+
+
+        for(auto it = _userConnMap.begin();it != _userConnMap.end();it++){
+            if (it->second == conn){
+                // 从map表中删除用户的连接信息
+                user.setId(it->first);
+                _userConnMap.erase(it);
+                break;
+            }
+        }
+
+    }
+
+    // 更新用户的状态信息
+    if (user.getId() != -1){
+        user.setState(OFFLINE);
+        _userModel.updateState(user);
+        LOG_INFO << "客户端异常退出...更改用户为离线状态";
+    }
+
 }

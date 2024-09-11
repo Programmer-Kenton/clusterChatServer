@@ -40,6 +40,9 @@ public:
     // 获取消息对应的处理器
     MsgHandler getHandler(int msgId);
 
+    // 处理客户端异常退出
+    void clientCloseException(const TcpConnectionPtr& conn);
+
 private:
 
     // 注册消息以及对应的handler回调操作
@@ -47,6 +50,12 @@ private:
 
     // 存储消息id和其对应的事件处理方法
     unordered_map<int,MsgHandler> _msgHandlerMap;
+
+    // 存储在线用户的通信连接
+    unordered_map<int,TcpConnectionPtr> _userConnMap;
+
+    // 定义互斥锁 保证_userConnMap的线程安全
+    mutex _connMutex;
 
     // 用户数据操作对象
     UserModel _userModel;
