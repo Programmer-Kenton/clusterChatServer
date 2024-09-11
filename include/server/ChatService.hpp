@@ -14,7 +14,7 @@
 #include <string>
 #include "json.hpp"
 #include "Public.hpp"
-#include "DataBase.h"
+#include "UserModel.hpp"
 
 using namespace muduo;
 using namespace muduo::net;
@@ -47,6 +47,9 @@ private:
 
     // 存储消息id和其对应的事件处理方法
     unordered_map<int,MsgHandler> _msgHandlerMap;
+
+    // 用户数据操作对象
+    UserModel _userModel;
 };
 
 

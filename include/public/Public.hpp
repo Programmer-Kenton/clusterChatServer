@@ -12,16 +12,18 @@
 
 // 函数回调消息类型
 enum EnMsgType{
-    // 登录消息
-    LOGIN_MSG = 1,
-    // 注册消息
-    REG_MSG = 2
+    LOGIN_MSG = 1, // 登录消息
+    REG_MSG = 2, // 注册消息
+    REG_MSG_ACK = 3 // 注册响应消息
 };
 
 // 回调消息
 const std::string MSGID = "msgid";
+const std::string ERRNO = "errno";
 
-// 发送方信息
+// 用户信息
 const std::string ID = "id";
+const std::string PWD = "password";
+const std::string NAME = "name";
 
 #endif //CLUSTERCHATSERVER_PUBLIC_H

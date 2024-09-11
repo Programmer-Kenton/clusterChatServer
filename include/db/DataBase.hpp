@@ -5,8 +5,8 @@
  * @Github https://github.com/Programmer-Kenton
  * @Author Kenton
  */
-#ifndef CLUSTERCHATSERVER_DATABASE_H
-#define CLUSTERCHATSERVER_DATABASE_H
+#ifndef CLUSTERCHATSERVER_DATABASE_HPP
+#define CLUSTERCHATSERVER_DATABASE_HPP
 
 #include <muduo/base/Logging.h>
 #include <mysql/mysql.h>
@@ -14,14 +14,15 @@
 
 using namespace std;
 
-class DataBase {
+class MySQL {
 
+    // {"msgid":2,"name":"LCX","password":"123456"}
 public:
     // 初始化数据库连接
-    DataBase();
+    MySQL();
 
     // 释放数据库连接资源
-    ~DataBase();
+    ~MySQL();
 
     // 连接数据库
     bool connect();
@@ -60,4 +61,4 @@ private:
 };
 
 
-#endif //CLUSTERCHATSERVER_DATABASE_H
+#endif //CLUSTERCHATSERVER_DATABASE_HPP

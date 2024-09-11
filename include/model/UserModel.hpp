@@ -5,12 +5,12 @@
  * @Github https://github.com/Programmer-Kenton
  * @Author Kenton
  */
-#ifndef CLUSTERCHATSERVER_USERMODEL_H
-#define CLUSTERCHATSERVER_USERMODEL_H
+#ifndef CLUSTERCHATSERVER_USERMODEL_HPP
+#define CLUSTERCHATSERVER_USERMODEL_HPP
 
 #include <iostream>
 #include "User.h"
-#include "DataBase.h"
+#include "DataBase.hpp"
 
 using namespace std;
 
@@ -20,4 +20,4 @@ public:
 };
 
 
-#endif //CLUSTERCHATSERVER_USERMODEL_H
+#endif //CLUSTERCHATSERVER_USERMODEL_HPP

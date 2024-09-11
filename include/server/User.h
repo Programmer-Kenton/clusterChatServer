@@ -17,7 +17,7 @@ class User {
 
 public:
 
-    User(int id = -1,string name = "",string pwd = "",string state = "");
+    User(int id = -1,string name = "",string pwd = "",string state = "offline");
 
     void setId(int id);
 

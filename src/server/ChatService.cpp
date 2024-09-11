@@ -18,7 +18,28 @@ void ChatService::login(const TcpConnectionPtr &conn, json &js, Timestamp time) 
 }
 
 void ChatService::reg(const TcpConnectionPtr &conn, json &js, Timestamp time) {
-    LOG_INFO << "do reg service---注册成功";
+    string name = js[NAME];
+    string pwd = js[PWD];
+
+    User user;
+    user.setName(name);
+    user.setPwd(pwd);
+    json response;
+    bool state = _userModel.insert(user);
+    if (state){
+        // 注册成功
+        response[MSGID] = REG_MSG_ACK;
+        response[ERRNO] = 0;
+        response[ID] = user.getId();
+        conn->send(response.dump());
+        LOG_INFO << "用户名为:" << user.getName() << " 注册成功...";
+    }else{
+        // 注册失败
+        response[MSGID] = REG_MSG_ACK;
+        response[ERRNO] = 1;
+        conn->send(response.dump());
+        LOG_INFO << "用户名为:" << user.getName() << " 注册失败...";
+    }
 }
 
 ChatService::ChatService() {

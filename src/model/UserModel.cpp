@@ -6,20 +6,22 @@
  * @Author Kenton
  */
 
-#include "UserModel.h"
+#include "UserModel.hpp"
 
 bool UserModel::insert(User &user) {
     char sql[1024] = {0};
 
-    sprintf(sql,"insert into User(name,password,state) values('%s','%s','%s')",
+    sprintf(sql,"insert into user(name,password,state) values('%s','%s','%s')",
             user.getName().c_str(),user.getPassword().c_str(),user.getState().c_str());
 
-     DataBase db;
+    LOG_INFO << "插入用户操作,拼接好的sql为:" << sql;
 
-    if (db.connect()){
-        if (db.update(sql)){
+     MySQL mysql;
+
+    if (mysql.connect()){
+        if (mysql.update(sql)){
             // 获取插入成功的用户数据生成的主键id
-            user.setId(mysql_insert_id(db.getConnection()));
+            user.setId(mysql_insert_id(mysql.getConnection()));
             return true;
         }
     }

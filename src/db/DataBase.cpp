@@ -6,37 +6,43 @@
  * @Author Kenton
  */
 
-#include "DataBase.h"
+#include "DataBase.hpp"
 
-DataBase::DataBase() {
+MySQL::MySQL() {
     _conn = mysql_init(nullptr);
-    loadConfigFile();
+    LOG_INFO << "开始加载数据库配置...";
+    if (loadConfigFile()){
+        LOG_INFO << "数据库配置加载完成... ip = " << _ip << " username = " << _username <<" password = " << _password;
+    }else{
+        LOG_ERROR << "数据库配置加载失败...";
+    }
 }
 
-DataBase::~DataBase() {
+MySQL::~MySQL() {
     if (_conn != nullptr) mysql_close(_conn);
 }
 
-bool DataBase::connect() {
+bool MySQL::connect() {
     MYSQL *p = mysql_real_connect(_conn,_ip.c_str(),_username.c_str(),_password.c_str(),_dbname.c_str(),_port, nullptr,0);
 
     if (p != nullptr){
         mysql_query(_conn,"set names gbk");
+        LOG_INFO << "数据库连接数据成功...";
     }
-    LOG_INFO << "连接数据成功..." << "username = " << _username << " dbname = " << _dbname << " port" << _port;
+
 
     return p;
 }
 
-bool DataBase::update(string sql) {
+bool MySQL::update(string sql) {
     if (mysql_query(_conn,sql.c_str())){
-        LOG_ERROR << __FILE__ << ':' << __LINE__ << ':' << sql << "更新失败";
+        LOG_ERROR << __FILE__ << ':' << __LINE__ << ':' << sql << " 更新失败";
         return false;
     }
     return true;
 }
 
-MYSQL_RES *DataBase::query(string sql) {
+MYSQL_RES *MySQL::query(string sql) {
     if (mysql_query(_conn,sql.c_str())){
         LOG_ERROR << __FILE__ << ':' << __LINE__ << ':' << sql << "查询失败";
         return nullptr;
@@ -44,41 +50,52 @@ MYSQL_RES *DataBase::query(string sql) {
     return mysql_use_result(_conn);
 }
 
-bool DataBase::loadConfigFile() {
+bool MySQL::loadConfigFile() {
     FILE *pf = fopen("mysql.ini","r");
+
+    // 打印当前工作目录
+    char cwd[1024];
+    if (getcwd(cwd, sizeof(cwd)) != nullptr) {
+        LOG_INFO << "Current working directory: " << cwd;
+    }
+
     if (pf == nullptr){
-        LOG_ERROR << "mysql.ini file is not exist";
+        LOG_ERROR << "文件空指针原因:" << strerror(errno);
         return false;
     }
 
-    while(!feof(pf)){
-        char line[1024] = {0};
-        fgets(line,1024,pf);
+    char line[1024];  // 定义line，用于存储读取的每一行数据
+
+    while (fgets(line, 1024, pf) != nullptr) {
         string str = line;
+        // 去掉末尾换行符
+        str.erase(std::remove(str.begin(), str.end(), '\n'), str.end());
+        str.erase(std::remove(str.begin(), str.end(), '\r'), str.end());
+
         // 从0下标开始找到第一个出现'='的下标
-        int idx = str.find('=',0);
+        int idx = str.find('=', 0);
         // 无效的配置
         if (idx == -1) continue;
-        int endidx = str.find('\n',idx);
-        string key = str.substr(0,idx);
-        string value = str.substr(idx + 1,endidx - idx - 1);
 
-        if (key == "ip"){
+        string key = str.substr(0, idx);
+        string value = str.substr(idx + 1);
+
+        // 解析配置项
+        if (key == "ip") {
             _ip = value;
-        } else if (key == "port"){
+        } else if (key == "port") {
             _port = atoi(value.c_str());
-        } else if (key == "username"){
-            _username = key;
-        } else if (key == "dbname"){
+        } else if (key == "username") {
+            _username = value;  // 修正错误
+        } else if (key == "dbname") {
             _dbname = value;
-        } else if (key == "password"){
+        } else if (key == "password") {
             _password = value;
         }
     }
-
     return true;
 }
 
-MYSQL *DataBase::getConnection() {
+MYSQL *MySQL::getConnection() {
     return _conn;
 }
