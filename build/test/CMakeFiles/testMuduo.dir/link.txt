@@ -1,1 +1,0 @@
-/usr/bin/g++ -g -g CMakeFiles/testMuduo.dir/testMuduo.cpp.o -o /usr/local/WorkSpace/clusterChatServer/bin/testMuduo  -lmuduo_net -lmuduo_base

@@ -1,1 +1,0 @@
-/usr/bin/g++ -g -g CMakeFiles/testJson.dir/testJson.cpp.o -o /usr/local/WorkSpace/clusterChatServer/bin/testJson

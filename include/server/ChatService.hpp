@@ -45,6 +45,9 @@ public:
     // 一对一聊天业务
     void oneChat(const TcpConnectionPtr &conn,json &js,Timestamp time);
 
+    // 处理注销业务
+    void loginOut(const TcpConnectionPtr &conn, json &js, Timestamp time);
+
     // 获取消息对应的处理器
     MsgHandler getHandler(int msgId);
 

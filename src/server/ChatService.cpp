@@ -120,9 +120,15 @@ void ChatService::reg(const TcpConnectionPtr &conn, json &js, Timestamp time) {
 ChatService::ChatService() {
     // 初始化时插入回调消息及绑定的函数
     _msgHandlerMap.insert({LOGIN_MSG,std::bind(&ChatService::login,this,_1,_2,_3)});
+    _msgHandlerMap.insert({LOGIN_OUT_MSG, std::bind(&ChatService::loginOut, this, _1, _2, _3)});
     _msgHandlerMap.insert({REG_MSG,std::bind(&ChatService::reg,this,_1,_2,_3)});
     _msgHandlerMap.insert({ONE_CHAT_MSG,std::bind(&ChatService::oneChat,this,_1,_2,_3)});
     _msgHandlerMap.insert({ADD_FRIEND_MSG,std::bind(&ChatService::addFriend,this,_1,_2,_3)});
+
+    // 群组业务管理相关事件处理回调注册
+    _msgHandlerMap.insert({CREATE_GROUP_MSG, std::bind(&ChatService::createGroup, this, _1, _2, _3)});
+    _msgHandlerMap.insert({ADD_GROUP_MSG, std::bind(&ChatService::addGroup, this, _1, _2, _3)});
+    _msgHandlerMap.insert({GROUP_CHAT_MSG, std::bind(&ChatService::groupChat, this, _1, _2, _3)});
 }
 
 MsgHandler ChatService::getHandler(int msgId) {
@@ -168,6 +174,7 @@ void ChatService::oneChat(const TcpConnectionPtr &conn, json &js, Timestamp time
     int toId = js[TO].get<int>();
     string msg = js[MSG];
 
+    // LOG_INFO << "测试接收客户端通信信息... 接收用户id:" << toId << " 接收信息:" << msg;
     // 标识用户是否在线
     // bool userState = false;
 
@@ -255,4 +262,24 @@ void ChatService::groupChat(const TcpConnectionPtr &conn, json &js, Timestamp ti
             _offlineMsgModel.insert(id,js.dump());
         }
     }
+}
+
+void ChatService::loginOut(const TcpConnectionPtr &conn, json &js, Timestamp time) {
+    int userid = js[ID].get<int>();
+
+    {
+        lock_guard<mutex> lock(_connMutex);
+        auto it = _userConnMap.find(userid);
+        if (it != _userConnMap.end())
+        {
+            _userConnMap.erase(it);
+        }
+    }
+
+//    // 用户注销，相当于就是下线，在redis中取消订阅通道
+//    _redis.unsubscribe(userid);
+//
+    // 更新用户的状态信息
+    User user(userid, "", "", "offline");
+    _userModel.updateState(user);
 }

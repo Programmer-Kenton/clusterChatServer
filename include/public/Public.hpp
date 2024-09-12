@@ -30,6 +30,8 @@ enum EnMsgType{
     ADD_GROUP_MSG = 8,
     // 群聊天
     GROUP_CHAT_MSG = 9,
+    // 注销消息
+    LOGIN_OUT_MSG = 10
 };
 
 // 回调消息
@@ -45,7 +47,7 @@ const std::string ERRMSG = "errmsg";
 const std::string ID = "id";
 const std::string PWD = "password";
 const std::string NAME = "name";
-const std::string TO = "to";
+const std::string TO = "toid";
 const std::string FROM = "from";
 const std::string FRIENDID = "friendid";
 const std::string USERS = "users";
