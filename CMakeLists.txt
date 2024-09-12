@@ -17,6 +17,7 @@ include_directories(${PROJECT_SOURCE_DIR}/include/db)
 include_directories(${PROJECT_SOURCE_DIR}/include/model)
 include_directories(${PROJECT_SOURCE_DIR}/include/public)
 include_directories(${PROJECT_SOURCE_DIR}/include/server)
+include_directories(${PROJECT_SOURCE_DIR}/include/redis)
 
 ## 加载子目录
 ## 加载测试子模块
